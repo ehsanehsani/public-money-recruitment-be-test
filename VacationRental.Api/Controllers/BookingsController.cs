@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using VacationRental.Api.Enums;
 using VacationRental.Api.Models;
 
 namespace VacationRental.Api.Controllers
@@ -74,7 +75,7 @@ namespace VacationRental.Api.Controllers
             
             var key = new ResourceIdViewModel { Id = _bookings.Keys.Count + 1 };
 
-            _bookings.Add(key.Id, new BookingViewModel
+            _bookings.Add(key.Id, new BookingViewModel(bookingType:BookingType.Booking)
             {
                 Id = key.Id,
                 Nights = model.Nights,
@@ -82,6 +83,19 @@ namespace VacationRental.Api.Controllers
                 Unit = unitNumber,
                 Start = model.Start.Date
             });
+
+            if (_rentals[model.RentalId].PreparationTimeInDays >= 0)
+            {
+                key = new ResourceIdViewModel { Id = _bookings.Keys.Count + 1 };
+                _bookings.Add(key.Id, new BookingViewModel(bookingType:BookingType.Preparation)
+                {
+                    Id = key.Id,
+                    Nights = _rentals[model.RentalId].PreparationTimeInDays,
+                    RentalId = model.RentalId,
+                    Unit = unitNumber,
+                    Start = model.Start.AddDays(model.Nights)
+                });
+            }
 
             return key;
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using VacationRental.Api.Enums;
 using VacationRental.Api.Models;
 
 namespace VacationRental.Api.Controllers
@@ -38,7 +39,8 @@ namespace VacationRental.Api.Controllers
                 var date = new CalendarDateViewModel
                 {
                     Date = start.Date.AddDays(i),
-                    Bookings = new List<CalendarBookingViewModel>()
+                    Bookings = new List<CalendarBookingViewModel>(),
+                    PreparationTimes = new List<PreparationTimeViewModel>()
                 };
                 
                 foreach (var booking in _bookings.Values)
@@ -46,11 +48,22 @@ namespace VacationRental.Api.Controllers
                     if (booking.RentalId == rentalId
                         && booking.Start <= date.Date && booking.Start.AddDays(booking.Nights) > date.Date)
                     {
-                        date.Bookings.Add(new CalendarBookingViewModel
+                        if (booking.BookingType == BookingType.Booking)
                         {
-                            Id = booking.Id,
-                            Unit = booking.Unit
-                        });
+                            date.Bookings.Add(new CalendarBookingViewModel
+                            {
+                                Id = booking.Id,
+                                Unit = booking.Unit
+                            });
+                        }
+                        
+                        if (booking.BookingType == BookingType.Preparation)
+                        {
+                            date.PreparationTimes.Add(new PreparationTimeViewModel()
+                            {
+                                Unit = booking.Unit
+                            });
+                        }
                     }
                 }
 
