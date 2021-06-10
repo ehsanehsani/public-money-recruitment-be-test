@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using VacationRental.Api.Models;
 
@@ -33,6 +34,8 @@ namespace VacationRental.Api.Controllers
         [HttpPost]
         public ResourceIdViewModel Post(BookingBindingModel model)
         {
+            var reservedUnitNumber = new List<int>();
+            
             if (model.Nights <= 0)
                 throw new ApplicationException("Nigts must be positive");
             if (!_rentals.ContainsKey(model.RentalId))
@@ -49,13 +52,26 @@ namespace VacationRental.Api.Controllers
                         || (booking.Start > model.Start && booking.Start.AddDays(booking.Nights) < model.Start.AddDays(model.Nights)))
                     {
                         count++;
+                        if (reservedUnitNumber.IndexOf(booking.Unit) == -1)
+                        {
+                            reservedUnitNumber.Add(booking.Unit);    
+                        }
                     }
                 }
+                
                 if (count >= _rentals[model.RentalId].Units)
                     throw new ApplicationException("Not available");
             }
 
+            //In each book we should assign the unit number, so we want to find available unit number:
+            var unitLists = Enumerable.Range(1, _rentals[model.RentalId].Units).ToList();
+            var unitNumber = unitLists.Except(reservedUnitNumber).FirstOrDefault();
 
+            if (unitNumber == 0)
+            {
+                throw new ApplicationException("Not available");
+            }
+            
             var key = new ResourceIdViewModel { Id = _bookings.Keys.Count + 1 };
 
             _bookings.Add(key.Id, new BookingViewModel
@@ -63,6 +79,7 @@ namespace VacationRental.Api.Controllers
                 Id = key.Id,
                 Nights = model.Nights,
                 RentalId = model.RentalId,
+                Unit = unitNumber,
                 Start = model.Start.Date
             });
 

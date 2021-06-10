@@ -40,13 +40,17 @@ namespace VacationRental.Api.Controllers
                     Date = start.Date.AddDays(i),
                     Bookings = new List<CalendarBookingViewModel>()
                 };
-
+                
                 foreach (var booking in _bookings.Values)
                 {
                     if (booking.RentalId == rentalId
                         && booking.Start <= date.Date && booking.Start.AddDays(booking.Nights) > date.Date)
                     {
-                        date.Bookings.Add(new CalendarBookingViewModel { Id = booking.Id });
+                        date.Bookings.Add(new CalendarBookingViewModel
+                        {
+                            Id = booking.Id,
+                            Unit = booking.Unit
+                        });
                     }
                 }
 
