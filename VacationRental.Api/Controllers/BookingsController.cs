@@ -38,7 +38,7 @@ namespace VacationRental.Api.Controllers
             var reservedUnitNumber = new List<int>();
             
             if (model.Nights <= 0)
-                throw new ApplicationException("Nigts must be positive");
+                throw new ApplicationException("Nights must be positive");
             if (!_rentals.ContainsKey(model.RentalId))
                 throw new ApplicationException("Rental not found");
 
@@ -50,7 +50,11 @@ namespace VacationRental.Api.Controllers
                     if (booking.RentalId == model.RentalId
                         && (booking.Start <= model.Start.Date && booking.Start.AddDays(booking.Nights) > model.Start.Date)
                         || (booking.Start < model.Start.AddDays(model.Nights) && booking.Start.AddDays(booking.Nights) >= model.Start.AddDays(model.Nights))
-                        || (booking.Start > model.Start && booking.Start.AddDays(booking.Nights) < model.Start.AddDays(model.Nights)))
+                        || (booking.Start > model.Start && booking.Start.AddDays(booking.Nights) < model.Start.AddDays(model.Nights))
+                        
+                        //check for preparation time
+                        || booking.Start > model.Start && booking.Start <
+                        model.Start.AddDays(model.Nights + _rentals[model.RentalId].PreparationTimeInDays))
                     {
                         count++;
                         if (reservedUnitNumber.IndexOf(booking.Unit) == -1)
