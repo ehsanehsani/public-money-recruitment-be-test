@@ -88,12 +88,12 @@ namespace VacationRental.Api.Controllers
                 Start = model.Start.Date
             });
 
-            if (_rentals[model.RentalId].PreparationTimeInDays >= 0)
+            if (_rentals[model.RentalId].PreparationTimeInDays > 0)
             {
-                key = new ResourceIdViewModel { Id = _bookings.Keys.Count + 1 };
-                _bookings.Add(key.Id, new BookingViewModel(bookingType:BookingType.Preparation)
+                var preparationTimekey = new ResourceIdViewModel { Id = _bookings.Keys.Count + 1 };
+                _bookings.Add(preparationTimekey.Id, new BookingViewModel(bookingType:BookingType.Preparation)
                 {
-                    Id = key.Id,
+                    Id = preparationTimekey.Id,
                     Nights = _rentals[model.RentalId].PreparationTimeInDays,
                     RentalId = model.RentalId,
                     Unit = unitNumber,
