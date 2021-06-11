@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using VacationRental.Api.Enums;
-using VacationRental.Api.Models;
+using VacationRental.Domain.Enums;
+using VacationRental.Domain.Models;
 
 namespace VacationRental.Api.Controllers
 {

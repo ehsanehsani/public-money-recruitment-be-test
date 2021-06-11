@@ -1,7 +1,7 @@
 ﻿using System;
-using VacationRental.Api.Enums;
+using VacationRental.Domain.Enums;
 
-namespace VacationRental.Api.Models
+namespace VacationRental.Domain.Models
 {
     public class BookingViewModel
     {

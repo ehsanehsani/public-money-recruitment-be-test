@@ -1,4 +1,4 @@
-﻿namespace VacationRental.Api.Enums
+﻿namespace VacationRental.Domain.Enums
 {
     public enum BookingType
     {
