@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VacationRental.Domain;
 using VacationRental.Domain.Enums;
+using VacationRental.Domain.Exceptions;
 using VacationRental.Domain.Models;
 using VacationRental.Domain.Services;
 
@@ -21,7 +23,7 @@ namespace VacationRental.Infrastructure.Services
         public BookingViewModel GetById(int bookingId)
         {
             if (!_bookings.ContainsKey(bookingId))
-                throw new ApplicationException("Booking not found");
+                throw new BookingNotFoundException(ExceptionMessages.BookingIdNotFound);
 
             return _bookings[bookingId];
         }
