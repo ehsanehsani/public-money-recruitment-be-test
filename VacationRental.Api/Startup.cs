@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using VacationRental.Domain.Models;
 using VacationRental.Domain.Services;
@@ -27,11 +28,17 @@ namespace VacationRental.Api
             services.AddMvc(options => options.EnableEndpointRouting = false);
 
             // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                c.EnableAnnotations();
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Vacation rental information", Version = "v1"});
+            });
 
             services.AddSingleton<IDictionary<int, RentalViewModel>>(new Dictionary<int, RentalViewModel>());
             services.AddSingleton<IDictionary<int, BookingViewModel>>(new Dictionary<int, BookingViewModel>());
             services.AddTransient<IBookingService, BookingService>();
+            services.AddTransient<ICalendarService, CalendarService>();
+            services.AddTransient<IRentalService, RentalService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
