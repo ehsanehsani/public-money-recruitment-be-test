@@ -38,10 +38,9 @@ namespace VacationRental.Infrastructure.Services
                 throw new ApplicationException("Rental not found");
 
             var count = 0;
-                foreach (var booking in _bookings.Values)
+                foreach (var booking in _bookings.Values.Where(x=>x.RentalId==model.RentalId))
                 {
-                    if (booking.RentalId == model.RentalId
-                        && (booking.Start <= model.Start.Date &&
+                    if ((booking.Start <= model.Start.Date &&
                             booking.Start.AddDays(booking.Nights) > model.Start.Date)
                         || (booking.Start < model.Start.AddDays(model.Nights) &&
                             booking.Start.AddDays(booking.Nights) >= model.Start.AddDays(model.Nights))
@@ -52,10 +51,10 @@ namespace VacationRental.Infrastructure.Services
                         || booking.Start > model.Start && booking.Start <
                         model.Start.AddDays(model.Nights + _rentals[model.RentalId].PreparationTimeInDays))
                     {
-                        count++;
                         if (reservedUnitNumber.IndexOf(booking.Unit) == -1)
                         {
                             reservedUnitNumber.Add(booking.Unit);
+                            count++;
                         }
                     }
                 }
