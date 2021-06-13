@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using VacationRental.Domain.Enums;
 using VacationRental.Domain.Models;
 using VacationRental.Domain.Services;
@@ -19,6 +20,7 @@ namespace VacationRental.Api.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Get Specific Calendar By Id")]
         public CalendarViewModel Get(int rentalId, DateTime start, int nights)
         {
             return _calendarService.Get(rentalId, start, nights);
