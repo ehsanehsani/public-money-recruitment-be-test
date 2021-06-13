@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using VacationRental.Domain.Enums;
 using VacationRental.Domain.Models;
 using VacationRental.Domain.Services;
@@ -38,10 +39,9 @@ namespace VacationRental.Infrastructure.Services
                     PreparationTimes = new List<PreparationTimeViewModel>()
                 };
                 
-                foreach (var booking in _bookings.Values)
+                foreach (var booking in _bookings.Values.Where(x=>x.RentalId==rentalId))
                 {
-                    if (booking.RentalId == rentalId
-                        && booking.Start <= date.Date && booking.Start.AddDays(booking.Nights) > date.Date)
+                    if (booking.Start <= date.Date && booking.Start.AddDays(booking.Nights) > date.Date)
                     {
                         if (booking.BookingType == BookingType.Booking)
                         {
