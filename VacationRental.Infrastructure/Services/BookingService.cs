@@ -37,9 +37,7 @@ namespace VacationRental.Infrastructure.Services
             if (!_rentals.ContainsKey(model.RentalId))
                 throw new ApplicationException("Rental not found");
 
-            for (var i = 0; i < model.Nights; i++)
-            {
-                var count = 0;
+            var count = 0;
                 foreach (var booking in _bookings.Values)
                 {
                     if (booking.RentalId == model.RentalId
@@ -64,7 +62,7 @@ namespace VacationRental.Infrastructure.Services
 
                 if (count >= _rentals[model.RentalId].Units)
                     throw new ApplicationException("Not available");
-            }
+            
 
             //In each book we should assign the unit number, so we want to find available unit number:
             var unitLists = Enumerable.Range(1, _rentals[model.RentalId].Units).ToList();
